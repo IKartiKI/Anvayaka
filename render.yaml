@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: backend-name
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "python -m uvicorn AnvayakaBackend.asgi:application --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: backend-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: key-value
+          name: backend-redis
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+    autoDeploy: true
+
+  - type: worker
+    name: backend-worker
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python mqtt_listener.py"
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: key-value
+          name: backend-redis
+          property: connectionString
+    autoDeploy: true
+
+# databases:
+#   - name: backend-db
+#     plan: free
+
+keyValues:
+  - name: backend-redis
+    plan: free
