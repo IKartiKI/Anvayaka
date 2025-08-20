@@ -3,7 +3,7 @@ import django
 import paho.mqtt.client as mqtt
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-from core.models import Task
+from backend.models import Task
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'AnvayakaBackend.settings')
 django.setup()
