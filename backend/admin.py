@@ -1,34 +1,33 @@
+# core/admin.py
 from django.contrib import admin
-from .models import CustomUser,Labour,Stock,Task,Parchi
-from django.contrib.auth.admin import UserAdmin
+from .models import Labour, Stock, UserProfile, Task, Parchi
 
-
-@admin.register(CustomUser)
-class CustomUserAdmin(UserAdmin):
-    # This displays the 'role' field in the user list view
-    list_display = ('username', 'email', 'role', 'is_staff')
-    
-    # This adds the 'role' field to the user editing form
-    fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('role',)}),
-    )
-
-
-@admin.register(Labour)
 class LabourAdmin(admin.ModelAdmin):
-    list_display=['id', 'name', 'skill','thekedar']
+    list_display = ('id','name', 'age', 'expertise')
+    search_fields = ('name', 'expertise')
 
-
-@admin.register(Task)
-class TaskAdmin(admin.ModelAdmin):
-    list_display=['id', 'task_name', 'description', 'status', 'owner', 'thekedar']
-
-
-@admin.register(Stock)
 class StockAdmin(admin.ModelAdmin):
-    list_display= ['id', 'item_name', 'quantity', 'is_counterfeit']
+    list_display = ('id','name', 'type', 'quantity')
+    search_fields = ('name', 'type')
 
-@admin.register(Parchi)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ['username','role']
+    search_fields = ['role']
+
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ('id','name', 'description')
+    search_fields = ('name', 'description')
+
+# core/admin.py
+from django.contrib import admin
+from .models import Labour, Stock, UserProfile, Task, Parchi
+
 class ParchiAdmin(admin.ModelAdmin):
-    list_display= ['id', 'task', 'labour', 'parchi_details', 'created_at']
+    list_display = ('id','details','task','labour','deliverable','deadline')
+    search_fields = ('labour__name', 'stock__name')
 
+admin.site.register(Parchi, ParchiAdmin)
+admin.site.register(Labour, LabourAdmin)
+admin.site.register(Stock, StockAdmin)
+admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(Task, TaskAdmin)

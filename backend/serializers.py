@@ -1,29 +1,30 @@
 from rest_framework import serializers
-from .models import CustomUser, Labour, Stock, Task,  Parchi
-
-class CustomUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = ['id', 'username', 'email', 'role']
+from .models import Labour, Stock, Parchi, Task, UserProfile
 
 class LabourSerializer(serializers.ModelSerializer):
     class Meta:
         model = Labour
-        fields = ['id', 'name', 'skill']
-
+        fields = '__all__'
+    
 class StockSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stock
-        fields = ['id', 'item_name', 'quantity', 'is_counterfeit']
+        fields = '__all__'
+
+class ParchiSerializer(serializers.ModelSerializer):
+    task=serializers.StringRelatedField()
+    labour=serializers.StringRelatedField()
+    class Meta:
+        model = Parchi
+        fields = ['id', 'task', 'labour', 'details', 'deliverable', 'deadline']
+
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ['id', 'task_name', 'description', 'status', 'owner', 'thekedar']
-        read_only_fields = ['owner'] # Owner is set by the request user
+        fields = '__all__'
 
-
-class ParchiSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Parchi
-        fields = ['id', 'task', 'labour', 'parchi_details', 'created_at']
+        model = UserProfile
+        fields = '__all__'
