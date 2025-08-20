@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.models import Labour, Stock, Parchi, Task, UserProfile
+from .models import Labour, Stock, Parchi, Task, UserProfile
 
 class LabourSerializer(serializers.ModelSerializer):
     class Meta:
