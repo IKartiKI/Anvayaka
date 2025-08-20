@@ -15,6 +15,8 @@ import backend.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'AnvayakaBackend.settings')
 
+from channels.layers import get_channel_layer
+
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
