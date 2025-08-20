@@ -2,12 +2,16 @@ from django.db import models
 from django.contrib.auth.models import User  # For owners and thekedars
 from django.contrib.postgres.fields import ArrayField  # If using Postgres
 import uuid 
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Role(models.TextChoices):
     OWNER = 'owner', 'Owner'
     THEKEDAR = 'thekedar', 'Thekedar'
 
-class UserProfile(User):
+class UserProfile(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE,)
     role = models.CharField(max_length=20, choices=Role.choices)
 
 class Labour(models.Model):

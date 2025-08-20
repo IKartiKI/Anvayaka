@@ -11,8 +11,12 @@ class StockAdmin(admin.ModelAdmin):
     search_fields = ('name', 'type')
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ['username','role']
-    search_fields = ['role']
+    list_display = ['get_username', 'user']  # Replace 'username' with 'get_username'
+    
+    def get_username(self, obj):
+        return obj.user.username
+    get_username.short_description = 'Username'  # This sets the column header
+    get_username.admin_order_field = 'user__username'
 
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('id','name', 'description')
