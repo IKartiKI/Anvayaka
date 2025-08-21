@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../services/api_service.dart';
 import '../widgets/task_card.dart';
+import 'dart:math'; // 👈 add at the top
 
 class RunningTasksScreen extends StatefulWidget {
   const RunningTasksScreen({super.key});
@@ -55,23 +56,23 @@ class _RunningTasksScreenState extends State<RunningTasksScreen> {
       });
       
       setState(() {
-        _tasks = sortedTasks;
+        _tasks = tasks;
         _isLoading = false;
       });
 
-      // No auto-linking or polling. Initialize static progress for all tasks.
-      _stopAllLiveUpdates();
-      _activeTaskId = null;
-      _taskProgress.clear();
-      int staticIndex = 0;
-      for (final t in sortedTasks) {
-        final tid = t['id']?.toString();
-        if (tid == null) continue;
-        final staticProgress = [0.25, 0.45, 0.75, 0.90][staticIndex % 4];
-        staticIndex++;
-        final totalQuantity = t['quantity'] ?? 100;
-        _taskProgress[tid] = (staticProgress * totalQuantity).round();
-      }
+      // // No auto-linking or polling. Initialize static progress for all tasks.
+      // _stopAllLiveUpdates();
+      // _activeTaskId = null;
+      // _taskProgress.clear();
+      // int staticIndex = 0;
+      // for (final t in sortedTasks) {
+      //   final tid = t['id']?.toString();
+      //   if (tid == null) continue;
+      //   final staticProgress = [0.25, 0.45, 0.75, 0.90][staticIndex % 4];
+      //   staticIndex++;
+      //   final totalQuantity = t['quantity'] ?? 100;
+      //   _taskProgress[tid] = (staticProgress * totalQuantity).round();
+      // }
     } catch (e) {
       setState(() {
         _error = e.toString();
@@ -122,9 +123,9 @@ class _RunningTasksScreenState extends State<RunningTasksScreen> {
     try {
       final response = await ApiService.getLiveUpdate(taskId);
       final completedQuantity = response['completed_quantity'] ?? 0;
-      
+
       print('[RunningTasks] Updated progress for task $taskId: $completedQuantity items');
-      
+
       if (mounted) {
         setState(() {
           _taskProgress[taskId] = completedQuantity;
@@ -333,6 +334,7 @@ class _RunningTasksScreenState extends State<RunningTasksScreen> {
                   onPressed: () async {
                     final taskId = task['id']?.toString();
                     if (taskId == null) return;
+                    await ApiService().stopLiveUpdate(task['id']);
                     try {
                       // Stop live updates for this task if any
                       _stopLiveUpdateForTask(taskId);

@@ -153,6 +153,23 @@ class ApiService {
     }
   }
 
+  // Stop Live Update
+  Future<Map<String, dynamic>> stopLiveUpdate(String taskId) async {
+    final url = Uri.parse('$baseUrl/mqtt/stop/');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'task_id': taskId}),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to stop live update');
+    }
+  }
+
+
   static Future<void> deleteTask(String taskId) async {
     try {
       final url = '$baseUrl/task/$taskId/';
