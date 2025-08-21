@@ -1,6 +1,7 @@
 // lib/screens/assign_task_screen.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../services/api_service.dart';
 
 class AssignTaskScreen extends StatefulWidget {
   const AssignTaskScreen({super.key});
@@ -14,15 +15,8 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
   String? _selectedTask;
   String _deliverables = '';
   DateTime? _deadline;
-  String _timeAllotted = '';
-  final List<String> _workers = [
-    'Raj Kumar (Cutting)',
-    'Priya Sharma (Stitching)',
-    'Amit Singh (Sole Attachment)',
-    'Sunita Devi (Assembly)',
-    'Vikash Yadav (Packing)',
-    'Sumitra Devi(Finishing)'
-  ];
+  String _quantity = '';
+  bool _isLoading = false;
   final List<String> _tasks = [
     'Cutting',
     'Stitching',
@@ -31,7 +25,54 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
     'Finishing',
     'Packing',
   ];
-  List<String> _selectedWorkers = [];
+
+  Future<void> _assignTask() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final response = await ApiService.assignTask(
+        name: _selectedTask!,
+        description: _deliverables,
+        quantity: int.parse(_quantity),
+        dueDate: _deadline!,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Task Assigned Successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        
+        // Reset form
+        _formKey.currentState!.reset();
+        setState(() {
+          _selectedTask = null;
+          _deliverables = '';
+          _deadline = null;
+          _quantity = '';
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,63 +134,57 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
                         validator: (value) => value!.isEmpty ? 'Please enter deliverables' : null,
                       ),
                       const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              decoration: const InputDecoration(labelText: 'Deadline', suffixIcon: Icon(Icons.calendar_today)),
-                              onTap: () async {
-                                final now = DateTime.now();
-                                final lastDate = DateTime(now.year + 2, 12, 31); // 2 years from now
-                                final picked = await showDatePicker(
-                                  context: context,
-                                  initialDate: now,
-                                  firstDate: now,
-                                  lastDate: lastDate,
-                                );
-                                if (picked != null) setState(() => _deadline = picked);
-                              },
-                              controller: TextEditingController(text: _deadline != null ? DateFormat('dd/MM/yyyy').format(_deadline!) : ''),
-                              validator: (value) => _deadline == null ? 'Please select a deadline' : null,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: TextFormField(
-                              decoration: const InputDecoration(labelText: 'Time Allotted'),
-                              onChanged: (value) => _timeAllotted = value,
-                              validator: (value) => value!.isEmpty ? 'Please enter time allotted' : null,
-                            ),
-                          ),
-                        ],
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: 'Quantity'),
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) => _quantity = value,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter quantity';
+                          }
+                          if (int.tryParse(value) == null) {
+                            return 'Please enter a valid number';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(height: 16),
-                      const Text('Assign to Laborers', style: TextStyle(fontSize: 14)),
-                      ..._workers.map((worker) => CheckboxListTile(
-                        title: Text(worker),
-                        value: _selectedWorkers.contains(worker),
-                        onChanged: (bool? value) {
-                          setState(() {
-                            if (value == true) {
-                              _selectedWorkers.add(worker);
-                            } else {
-                              _selectedWorkers.remove(worker);
-                            }
-                          });
+                      TextFormField(
+                        decoration: const InputDecoration(labelText: 'Deadline', suffixIcon: Icon(Icons.calendar_today)),
+                        onTap: () async {
+                          final now = DateTime.now();
+                          final lastDate = DateTime(now.year + 2, 12, 31); // 2 years from now
+                          final picked = await showDatePicker(
+                            context: context,
+                            initialDate: now,
+                            firstDate: now,
+                            lastDate: lastDate,
+                          );
+                          if (picked != null) setState(() => _deadline = picked);
                         },
-                      )),
+                        controller: TextEditingController(text: _deadline != null ? DateFormat('dd/MM/yyyy').format(_deadline!) : ''),
+                        validator: (value) => _deadline == null ? 'Please select a deadline' : null,
+                      ),
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: _isLoading ? null : () async {
                           if (_formKey.currentState!.validate()) {
-                            // Handle task assignment logic here
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Task Assigned Successfully')),
-                            );
+                            await _assignTask();
                           }
                         },
                         style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                        child: const Center(child: Text('Assign Task', style: TextStyle(color: Colors.white))),
+                        child: _isLoading
+                            ? const Center(
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
+                                ),
+                              )
+                            : const Center(child: Text('Assign Task', style: TextStyle(color: Colors.white))),
                       ),
                     ],
                   ),
