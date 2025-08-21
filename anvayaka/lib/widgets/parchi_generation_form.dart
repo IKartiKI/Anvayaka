@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../services/labour_service.dart';
 
 class ParchiGenerationForm extends StatefulWidget {
   final Map<String, dynamic> task;
@@ -11,17 +12,6 @@ class ParchiGenerationForm extends StatefulWidget {
 }
 
 class _ParchiGenerationFormState extends State<ParchiGenerationForm> {
-  final List<String> _labourers = [
-    'Raj Kumar (Cutting)',
-    'Priya Sharma (Stitching)',
-    'Amit Singh (Sole Attachment)',
-    'Sunita Devi (Assembly)',
-    'Vikash Yadav (Packing)',
-    'Sumitra Devi (Finishing)',
-    'Ramesh Kumar (Quality Control)',
-    'Lakshmi Devi (Inspection)',
-  ];
-  
   List<String> _selectedLabourers = [];
   bool _isLoading = false;
 
@@ -112,15 +102,15 @@ class _ParchiGenerationFormState extends State<ParchiGenerationForm> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    ..._labourers.map((labourer) => CheckboxListTile(
-                      title: Text(labourer),
-                      value: _selectedLabourers.contains(labourer),
+                    ...LabourService.getAllLabours().map((labour) => CheckboxListTile(
+                      title: Text('${labour.name} (${labour.expertise})'),
+                      value: _selectedLabourers.contains(labour.id),
                       onChanged: (bool? value) {
                         setState(() {
                           if (value == true) {
-                            _selectedLabourers.add(labourer);
+                            _selectedLabourers.add(labour.id);
                           } else {
-                            _selectedLabourers.remove(labourer);
+                            _selectedLabourers.remove(labour.id);
                           }
                         });
                       },
@@ -213,10 +203,10 @@ class _ParchiGenerationFormState extends State<ParchiGenerationForm> {
 
     try {
       // For each selected labourer, generate a parchi
-      for (String labourer in _selectedLabourers) {
+      for (String labourId in _selectedLabourers) {
         await ApiService.generateParchi(
           taskId: widget.task['id'] ?? '',
-          labourId: '81c89460-5bcf-4d69-8acc-31bc8029d94a', // Fixed labour ID as specified
+          labourId: labourId,
           details: widget.task['description'] ?? '',
           deliverables: widget.task['quantity'] ?? 0,
           deadline: DateTime.parse(widget.task['due_date'] ?? DateTime.now().toIso8601String()),

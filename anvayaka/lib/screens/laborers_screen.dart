@@ -1,8 +1,9 @@
 // lib/screens/laborers_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/worker.dart';
-import '../widgets/worker_card.dart';
+import '../models/labour.dart';
+import '../services/labour_service.dart';
+import '../widgets/labour_card.dart';
 import '../providers/app_provider.dart';
 
 class LaborersScreen extends StatelessWidget {
@@ -17,13 +18,7 @@ class LaborersScreen extends StatelessWidget {
     final crossAxisCount = 2;
     final childAspectRatio = screenWidth < 600 ? 1.2 : 1.6;
     
-    final List<Worker> workers = [
-      Worker(initials: 'RK', name: 'Raj Kumar', age: 32, expertise: 'Welding', status: 'active'),
-      Worker(initials: 'PS', name: 'Priya Sharma', age: 28, expertise: 'Assembly', status: 'active'),
-      Worker(initials: 'AS', name: 'Amit Singh', age: 45, expertise: 'Quality Control', status: 'idle'),
-      Worker(initials: 'SD', name: 'Sunita Devi', age: 35, expertise: 'Painting', status: 'on-break'),
-      Worker(initials: 'VY', name: 'Vikash Yadav', age: 29, expertise: 'Machine Operation', status: 'active'),
-    ];
+    final List<Labour> labours = LabourService.getAllLabours();
 
     return Scaffold(
       body: Padding(
@@ -41,7 +36,7 @@ class LaborersScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '5 Total Workers',
+              '${labours.length} Total Labourers',
               style: TextStyle(fontSize: 12, color: Colors.grey[600]),
             ),
             const SizedBox(height: 16),
@@ -53,9 +48,9 @@ class LaborersScreen extends StatelessWidget {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
-                itemCount: workers.length,
+                itemCount: labours.length,
                 itemBuilder: (context, index) {
-                  return WorkerCard(worker: workers[index]);
+                  return LabourCard(labour: labours[index]);
                 },
               ),
             ),
