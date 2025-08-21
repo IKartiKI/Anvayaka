@@ -36,18 +36,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;shloksharma273&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "shloksharma273"
   }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:IKartiKI/Anvayaka.git&quot;,
-    &quot;accountId&quot;: &quot;57eb943a-144a-474f-bbf7-bbf38c9c4ae0&quot;
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:IKartiKI/Anvayaka.git",
+    "accountId": "57eb943a-144a-474f-bbf7-bbf38c9c4ae0"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -79,7 +79,7 @@
     "git-widget-placeholder": "shlok-frontend",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/shawarma/anvyayaka_pipeline/src/Anvayaka/anvayaka",
+    "last_opened_file_path": "/home/shawarma/anvyayaka_pipeline/src/anvayaka",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
