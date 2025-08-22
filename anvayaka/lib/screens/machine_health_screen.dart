@@ -37,10 +37,10 @@ class _MachineHealthScreenState extends State<MachineHealthScreen> {
           // If list is empty initially, add CNC Machine
           machines.add(
             Machine(
-              name: 'CNC Machine 1',
-              machineId: 'M001',
+              name: 'Spinning Machine',
+              machineId: 'T001',
               status: 'Healthy',
-              temperature: temp,
+              temperature: temp, // live update from API
               serviceProgress: 1450,
               serviceTotal: 2000,
               serviceDue: DateTime(2024, 9, 15),
@@ -48,11 +48,11 @@ class _MachineHealthScreenState extends State<MachineHealthScreen> {
             ),
           );
 
-          // Also add the other machines only once (initial load)
+// Also add the other machines only once (initial load)
           machines.addAll([
             Machine(
-              name: 'Welding Station A',
-              machineId: 'M002',
+              name: 'Weaving Loom',
+              machineId: 'T002',
               status: 'Warning',
               temperature: 72.0,
               serviceProgress: 1980,
@@ -61,8 +61,8 @@ class _MachineHealthScreenState extends State<MachineHealthScreen> {
               runningHours: 1890,
             ),
             Machine(
-              name: 'Paint Booth 1',
-              machineId: 'M003',
+              name: 'Dyeing Machine',
+              machineId: 'T003',
               status: 'Critical',
               temperature: 38.0,
               serviceProgress: 2100,
@@ -71,14 +71,24 @@ class _MachineHealthScreenState extends State<MachineHealthScreen> {
               runningHours: 2150,
             ),
             Machine(
-              name: 'Assembly Line B',
-              machineId: 'M004',
+              name: 'Stitching Machine',
+              machineId: 'T004',
               status: 'Healthy',
               temperature: 42.0,
               serviceProgress: 850,
               serviceTotal: 1500,
               serviceDue: DateTime(2024, 10, 1),
               runningHours: 890,
+            ),
+            Machine(
+              name: 'Finishing & Ironing Unit',
+              machineId: 'T005',
+              status: 'Healthy',
+              temperature: 40.0,
+              serviceProgress: 500,
+              serviceTotal: 1200,
+              serviceDue: DateTime(2024, 11, 10),
+              runningHours: 480,
             ),
           ]);
         }

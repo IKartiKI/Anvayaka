@@ -19,11 +19,11 @@ class _AssignTaskScreenState extends State<AssignTaskScreen> {
   bool _isLoading = false;
   final List<String> _tasks = [
     'Cutting',
-    'Stitching',
-    'Assembly',
-    'Sole Attachment',
-    'Finishing',
-    'Packing',
+    'Stitching & Tailoring',
+    'Embroidery & Surface Work',
+    'Ironing & Finishing',
+    'Quality Checking',
+    'Packaging',
   ];
 
   Future<void> _assignTask() async {
