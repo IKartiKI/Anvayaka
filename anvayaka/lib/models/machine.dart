@@ -1,4 +1,3 @@
-// lib/models/machine.dart
 class Machine {
   final String name;
   final String machineId;
@@ -8,7 +7,6 @@ class Machine {
   final int serviceTotal;
   final DateTime serviceDue;
   final int runningHours;
-  // just to see this on github
 
   Machine({
     required this.name,
@@ -21,29 +19,25 @@ class Machine {
     required this.runningHours,
   });
 
-  factory Machine.fromJson(Map<String, dynamic> json) {
+  Machine copyWith({
+    String? name,
+    String? machineId,
+    String? status,
+    double? temperature,
+    int? serviceProgress,
+    int? serviceTotal,
+    DateTime? serviceDue,
+    int? runningHours,
+  }) {
     return Machine(
-      name: json['name'],
-      machineId: json['machineId'],
-      status: json['status'],
-      temperature: json['temperature'],
-      serviceProgress: json['serviceProgress'],
-      serviceTotal: json['serviceTotal'],
-      serviceDue: DateTime.parse(json['serviceDue']),
-      runningHours: json['runningHours'],
+      name: name ?? this.name,
+      machineId: machineId ?? this.machineId,
+      status: status ?? this.status,
+      temperature: temperature ?? this.temperature,
+      serviceProgress: serviceProgress ?? this.serviceProgress,
+      serviceTotal: serviceTotal ?? this.serviceTotal,
+      serviceDue: serviceDue ?? this.serviceDue,
+      runningHours: runningHours ?? this.runningHours,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'machineId': machineId,
-      'status': status,
-      'temperature': temperature,
-      'serviceProgress': serviceProgress,
-      'serviceTotal': serviceTotal,
-      'serviceDue': serviceDue.toIso8601String(),
-      'runningHours': runningHours,
-    };
   }
 }

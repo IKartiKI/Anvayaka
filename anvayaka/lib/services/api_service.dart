@@ -86,6 +86,22 @@ class ApiService {
     }
   }
 
+  // Fetch latest temperature
+  static Future<double> fetchLatestTemperature() async {
+    final response = await http.get(Uri.parse('$baseUrl/get_latest_temperature/'));
+
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      // Ensure we parse double
+      print(data);
+      return (data['temperature'] as num).toDouble();
+    } else {
+      throw Exception("Failed to fetch temperature");
+    }
+  }
+
+
   static Future<List<Map<String, dynamic>>> getTasks() async {
     try {
       final response = await http.get(
